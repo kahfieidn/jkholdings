@@ -22,6 +22,12 @@ export interface Purchase {
   userId: string;
   assetId: string;
   amount: number;
+  quantity: number;
   purchaseDate: string;
   status: 'Pending' | 'Completed';
+}
+
+export interface PortfolioState {
+  balance: number;
+  purchases: Purchase[];
 }

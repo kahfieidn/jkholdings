@@ -14,6 +14,7 @@ export default function Navigation() {
     const navLinks = [
         { name: "Dashboard", href: "/dashboard" },
         { name: "Aset", href: "/assets" },
+        { name: "Pembelian", href: "/purchases" },
     ];
 
     // Close menu when clicking outside

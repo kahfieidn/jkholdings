@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "JK Holdings | Investment Portal",
@@ -44,7 +45,9 @@ export default function RootLayout({
         <div className="bg-gradient"></div>
         <div className="bg-blur-1"></div>
         <div className="bg-blur-2"></div>
-        <div style={{ flex: 1 }}>{children}</div>
+        <Providers>
+          <div style={{ flex: 1 }}>{children}</div>
+        </Providers>
         <Footer />
       </body>
     </html>
