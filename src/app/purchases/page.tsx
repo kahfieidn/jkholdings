@@ -32,8 +32,8 @@ export default function PurchasesPage() {
         setPortfolio(getPortfolio());
     }, []);
 
-    const openBuy = (asset: Asset) => {
-        setSelectedAsset(asset);
+    const openAddTransaction = () => {
+        setSelectedAsset(assets[0] || null);
         setQuantity(1);
         setBuyModalOpen(true);
         setMessage(null);
@@ -74,12 +74,17 @@ export default function PurchasesPage() {
             <Navigation />
 
             <main className="container" style={{ paddingTop: "2rem", paddingBottom: "4rem" }}>
-                <header style={{ marginBottom: "3rem" }}>
-                    <h1>Pasar Aset</h1>
-                    <p>Pilih dan beli aset premium untuk portofolio Anda.</p>
-                    <div className="glass-card" style={{ display: "inline-block", marginTop: "1rem", padding: "0.75rem 1.5rem" }}>
-                        Saldo Tersedia: <span style={{ color: "var(--primary)", fontWeight: 800 }}>Rp {portfolio.balance.toLocaleString("id-ID")}</span>
+                <header style={{ marginBottom: "3rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1.5rem" }}>
+                    <div>
+                        <h1>Riwayat Pembelian</h1>
+                        <p>Kelola dan pantau seluruh transaksi aset Anda.</p>
+                        <div className="glass-card" style={{ display: "inline-block", marginTop: "1rem", padding: "0.75rem 1.5rem" }}>
+                            Saldo Tersedia: <span style={{ color: "var(--primary)", fontWeight: 800 }}>Rp {portfolio.balance.toLocaleString("id-ID")}</span>
+                        </div>
                     </div>
+                    <button className="btn btn-primary" onClick={openAddTransaction} style={{ padding: "0.8rem 2rem", fontSize: "1rem" }}>
+                        + Tambah Transaksi
+                    </button>
                 </header>
 
                 {message && (
@@ -96,28 +101,7 @@ export default function PurchasesPage() {
                     </div>
                 )}
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem", marginBottom: "4rem" }}>
-                    {assets.map((asset) => (
-                        <div key={asset.id} className="glass-card" style={{ padding: "0", overflow: "hidden" }}>
-                            {asset.image && (
-                                <div style={{ height: "160px", backgroundImage: `url(${asset.image})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-                            )}
-                            <div style={{ padding: "1.25rem" }}>
-                                <div style={{ fontSize: "0.7rem", color: "var(--primary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem" }}>
-                                    {asset.type}
-                                </div>
-                                <h3 style={{ marginBottom: "0.5rem", fontSize: "1.1rem" }}>{asset.name}</h3>
-                                <div style={{ fontWeight: 700, fontSize: "1.25rem", marginBottom: "1rem" }}>
-                                    Rp {asset.price.toLocaleString("id-ID")}
-                                    <span style={{ fontSize: "0.8rem", color: "var(--text-dim)", fontWeight: 400 }}> / unit</span>
-                                </div>
-                                <button className="btn btn-primary btn-block" onClick={() => openBuy(asset)}>
-                                    Beli Sekarang
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+
 
                 <section>
                     <h2 style={{ marginBottom: "1.5rem" }}>Riwayat Transaksi</h2>
@@ -186,11 +170,34 @@ export default function PurchasesPage() {
                         onClick={(e) => e.stopPropagation()}
                         style={{ width: "100%", maxWidth: "450px" }}
                     >
-                        <h2 style={{ marginBottom: "1rem" }}>Konfirmasi Pembelian</h2>
-                        <div style={{ marginBottom: "1.5rem", padding: "1rem", background: "var(--glass)", borderRadius: "12px" }}>
-                            <div style={{ fontSize: "0.85rem", color: "var(--text-dim)", marginBottom: "0.25rem" }}>{selectedAsset.type}</div>
-                            <div style={{ fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.5rem" }}>{selectedAsset.name}</div>
-                            <div style={{ fontWeight: 800, color: "var(--primary)" }}>Rp {selectedAsset.price.toLocaleString("id-ID")} / unit</div>
+                        <h2 style={{ marginBottom: "1.5rem" }}>Tambah Transaksi</h2>
+
+                        <div className="form-group">
+                            <label className="form-label">Pilih Aset</label>
+                            <select
+                                className="form-input"
+                                value={selectedAsset.id}
+                                onChange={(e) => {
+                                    const asset = assets.find(a => a.id === e.target.value);
+                                    if (asset) setSelectedAsset(asset);
+                                }}
+                                style={{
+                                    background: "rgba(255, 255, 255, 0.05)",
+                                    color: "inherit",
+                                    border: "1px solid var(--border)"
+                                }}
+                            >
+                                {assets.map(asset => (
+                                    <option key={asset.id} value={asset.id} style={{ background: "#1a1a1a" }}>
+                                        {asset.name} - Rp {asset.price.toLocaleString("id-ID")}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div style={{ marginBottom: "1.5rem", padding: "1rem", background: "rgba(var(--primary-rgb), 0.05)", borderRadius: "12px", border: "1px dashed var(--primary)" }}>
+                            <div style={{ fontSize: "0.85rem", color: "var(--primary)", fontWeight: 600, marginBottom: "0.25rem" }}>{selectedAsset.type}</div>
+                            <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>{selectedAsset.name}</div>
                         </div>
 
                         <div className="form-group">

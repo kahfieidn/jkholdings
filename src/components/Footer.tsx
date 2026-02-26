@@ -4,12 +4,13 @@ export default function Footer() {
             overflow: "hidden",
             position: "relative",
             paddingTop: "3rem",
+            paddingBottom: "1.5rem",
             borderTop: "1px solid var(--border)",
         }}>
             {/* Big brand name */}
             <div style={{
                 textAlign: "center",
-                lineHeight: 0.9,
+                lineHeight: 1.1,
                 userSelect: "none",
                 pointerEvents: "none",
                 position: "relative",

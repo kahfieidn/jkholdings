@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import { MOCK_ASSETS } from "@/lib/mock-data";
 import { getPortfolio } from "@/lib/portfolio-store";
 import { PortfolioState, Asset } from "@/types";
+import PortfolioChart from "@/components/PortfolioChart";
 
 export default function DashboardPage() {
     const { data: session } = useSession();
@@ -62,6 +63,10 @@ export default function DashboardPage() {
     }, [] as any[]);
 
     const totalPortfolioValue = assetSummary.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
+    const chartData = assetSummary.map(asset => ({
+        name: asset.name,
+        value: asset.price * asset.quantity
+    }));
 
     return (
         <div className="fade-in">
@@ -75,28 +80,42 @@ export default function DashboardPage() {
 
                 <div style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
                     gap: "1.5rem",
                     marginBottom: "2.5rem"
                 }}>
-                    <div className="glass-card">
-                        <p style={{ marginBottom: "0.5rem" }}>Total Portfolio Value</p>
-                        <div style={{ fontSize: "clamp(1.6rem, 5vw, 2.5rem)", fontWeight: 800, color: "var(--primary)" }}>
-                            Rp {totalPortfolioValue.toLocaleString("id-ID")}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                        <div className="glass-card">
+                            <p style={{ marginBottom: "0.5rem" }}>Total Portfolio Value</p>
+                            <div style={{ fontSize: "clamp(1.6rem, 5vw, 2.5rem)", fontWeight: 800, color: "var(--primary)" }}>
+                                Rp {totalPortfolioValue.toLocaleString("id-ID")}
+                            </div>
+                            <p style={{ marginTop: "1rem", color: "var(--success)" }}>
+                                +4.2% from last month
+                            </p>
                         </div>
-                        <p style={{ marginTop: "1rem", color: "var(--success)" }}>
-                            +4.2% from last month
-                        </p>
+
+                        <div className="glass-card">
+                            <p style={{ marginBottom: "0.5rem" }}>Available Balance</p>
+                            <div style={{ fontSize: "clamp(1.6rem, 5vw, 2.5rem)", fontWeight: 800 }}>
+                                Rp {portfolio.balance.toLocaleString("id-ID")}
+                            </div>
+                            <button className="btn btn-primary" style={{ marginTop: "1rem", fontSize: "0.875rem" }}>
+                                Top Up Balance
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="glass-card">
-                        <p style={{ marginBottom: "0.5rem" }}>Available Balance</p>
-                        <div style={{ fontSize: "clamp(1.6rem, 5vw, 2.5rem)", fontWeight: 800 }}>
-                            Rp {portfolio.balance.toLocaleString("id-ID")}
-                        </div>
-                        <button className="btn btn-primary" style={{ marginTop: "1rem", fontSize: "0.875rem" }}>
-                            Top Up Balance
-                        </button>
+                    <div className="glass-card" style={{ display: "flex", flexDirection: "column" }}>
+                        <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>Portfolio Composition</h3>
+                        <p style={{ fontSize: "0.85rem", marginBottom: "1rem" }}>Distribution of assets by current value</p>
+                        {chartData.length > 0 ? (
+                            <PortfolioChart data={chartData} />
+                        ) : (
+                            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "300px", color: "var(--text-dim)" }}>
+                                No data to display
+                            </div>
+                        )}
                     </div>
                 </div>
 
